@@ -38,13 +38,13 @@ class AdequatelySpecifies arg spec where
 class FullySpecified :: RL.RowList Type -> Row Type -> Constraint
 class FullySpecified list r
 
+instance (RL.RowToList r list) => FullySpecified list r else
 instance
   ( R.Cons sym rtype rtail r
   , CompatibleArgument ltype rtype
   , FullySpecified ltail rtail
   ) =>
   FullySpecified (RL.Cons sym ltype ltail) r
-instance FullySpecified RL.Nil ()
 
 -- | Constrains two types to be the same or the first to be an Optional of the second.
 class CompatibleArgument :: Type -> Type -> Constraint
