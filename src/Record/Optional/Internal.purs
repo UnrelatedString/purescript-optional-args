@@ -27,16 +27,35 @@ infixr 4 type WithDefaults as -?->
 
 -- | Allows a record spec with `Optional`s to match real arguments.
 -- | Record specs are given as `Row`s (in parentheses) rather than `Record`s (in braces).
+class AdequatelySpecifies :: Type -> Row Type -> Constraint
 class AdequatelySpecifies arg spec where
-  specify :: forall r. FullySpecified r spec => arg -> Record r
+  specify ::
+    forall r list.
+    RL.RowToList spec list =>
+    FullySpecified list r =>
+    arg -> Record r
 
-class FullySpecified r spec
+class FullySpecified :: RL.RowList Type -> Row Type -> Constraint
+class FullySpecified list r
+
+instance
+  ( R.Cons sym rtype rtail r
+  , CompatibleArgument ltype rtype
+  , FullySpecified ltail rtail
+  ) =>
+  FullySpecified (RL.Cons sym ltype ltail) r
+instance FullySpecified RL.Nil ()
 
 -- | Constrains two types to be the same or the first to be an Optional of the second.
+class CompatibleArgument :: Type -> Type -> Constraint
 class CompatibleArgument x y | x -> y
 
+-- | All cases are covered by this instance chain;
+-- | it is impossible to define additional behavior.
 instance CompatibleArgument (Optional f a) (f a) else
 instance CompatibleArgument a a else
+-- | The final and most general case forces a
+-- | hopefully somewhat readable error.
 instance TE.Fail
   ( TE.Text "Expected: "
   |!
