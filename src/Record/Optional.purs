@@ -13,6 +13,8 @@ import Prim.Row as R
 import Prim.RowList as RL
 import Prim.TypeError as TE
 
+infixr 8 type TE.Beside as |!
+
 data Optional :: (Type -> Type) -> Type -> Type
 data Optional f a
 
@@ -31,12 +33,12 @@ instance CompatibleArgument (Optional f a) (f a) else
 instance CompatibleArgument a a else
 instance TE.Fail
   ( TE.Text "Expected: "
-  `TE.Beside`
+  |!
     TE.Quote a
-  `TE.Beside`
+  |!
     TE.Text ", got: "
-  `TE.Beside`
+  |!
     TE.Quote b
-  `TE.Beside`
+  |!
     TE.Text "in a record spec with optional arguments"
   ) => CompatibleArgument a b
