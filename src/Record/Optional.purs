@@ -40,5 +40,5 @@ instance TE.Fail
   |!
     TE.Quote b
   |!
-    TE.Text "in a record spec with optional arguments"
+    TE.Text " in a record spec with optional arguments"
   ) => CompatibleArgument a b
