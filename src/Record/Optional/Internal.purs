@@ -35,6 +35,7 @@ class AdequatelySpecifies arg spec where
     FullySpecified list r =>
     arg -> Record r
 
+-- | Removes all `Optional`s from a spec, given as a RowList.
 class FullySpecified :: RL.RowList Type -> Row Type -> Constraint
 class FullySpecified list r
 
