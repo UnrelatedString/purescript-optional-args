@@ -1,4 +1,4 @@
-module Record.Optional
+module Record.Optional.Internal
   ( Optional
   , type (?)
   , WithDefaults
