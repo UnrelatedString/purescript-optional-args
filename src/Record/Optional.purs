@@ -7,4 +7,5 @@ import Record.Optional.Internal
   , type (?)
   , WithDefaults
   , type (-?->)
+  , withDefaults
   ) as Reexports
