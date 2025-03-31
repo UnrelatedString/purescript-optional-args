@@ -27,8 +27,14 @@ type WithDefaults a b = forall r. AdequatelySpecifies r a => r -> b
 infix 8 type Optional as ?
 infixr 4 type WithDefaults as -?->
 
-withDefaults :: forall spec a b. FullySpecified spec a => (Record a -> b) -> spec -?-> b
-withDefaults f s = f $ specify s
+withDefaults ::
+  forall spec a b r.
+  FullySpecified spec a =>
+  (Record a -> b) ->
+  spec -?-> b
+withDefaults f = f'
+  where f' :: spec -?-> b
+        f' = f <<< specify
 
 -- | Allows a record spec with `Optional`s to match real arguments.
 -- | Record specs are given as `Row`s (in parentheses) rather than `Record`s (in braces).
@@ -39,6 +45,8 @@ class AdequatelySpecifies arg spec where
     FullySpecified spec r =>
     arg -> Record r
 
+-- | Removes all `Optional`s from a spec.
+class FullySpecified :: Row Type -> Row Type -> Constraint
 class FullySpecified spec r
 instance (RL.RowToList spec list, FullySpecified' list r) => FullySpecified spec r
 
